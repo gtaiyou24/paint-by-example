@@ -2,10 +2,10 @@
 import {onMounted, reactive, ref} from 'vue'
 import axios from "axios";
 
-const image = reactive<{ width: number, height: number }>({ width: 500, height: 500 });
+const image = reactive<{ width: number, height: number }>({ width: 512, height: 512 });
 const originImageUrl = ref('');
 const referenceImageUrl = ref('');
-const generatedImageUrl = ref('');
+const generatedImage = ref('');
 const lineColor = ref('rgba(255,255,255,1)');
 const backgroundImage = ref('');
 const canvas = ref();
@@ -29,8 +29,8 @@ const downloadImage = (): void => {
   img.src = originImageUrl.value;
   backgroundImage.value = `background-image: url("${img.src}"); background-color:rgba(255,255,255,0.0); background-blend-mode:lighten;`;
   img.onload = () => {
-    image.width = 512;
-    image.height = 512;
+    image.width = img.width;
+    image.height = img.height;
   }
   context.value.strokeStyle = lineColor.value;
 };
@@ -86,8 +86,8 @@ const generateImage = (): void => {
       )
       .then((response) => {
         console.log(response.data);
-        generatedImageUrl.value = response.data.image_url;
-        console.log(generatedImageUrl);
+        generatedImage.value = response.data.image;
+        console.log(generatedImage);
       })
       .catch((error) => {
         console.log(error)
@@ -118,10 +118,11 @@ const generateImage = (): void => {
     </div>
 
     <button @click="clear">クリア</button>
+    <button @click="save">保存</button>
     <button id="save" @click="generateImage">生成</button>
 
     <p v-if="base64ImageData">{{ base64ImageData }}</p>
-    <img v-if="generatedImageUrl" :src="generatedImageUrl">
+    <img v-if="generatedImage" :src="generatedImage">
   </main>
 </template>
 
@@ -132,9 +133,7 @@ const generateImage = (): void => {
   background-image: url("https://github.com/Fantasy-Studio/Paint-by-Example/blob/main/examples/image/example_1.png?raw=true");
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: contain;
-  width: 512px;
-  height: 512px;
+  background-size: 100% auto;
 }
 header {
   line-height: 1.5;
