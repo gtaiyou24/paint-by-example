@@ -86,7 +86,7 @@ const generateImage = (): void => {
       )
       .then((response) => {
         console.log(response.data);
-        generatedImageUrl.value = response.data.imageUrl;
+        generatedImageUrl.value = response.data.image_url;
         console.log(generatedImageUrl);
       })
       .catch((error) => {
